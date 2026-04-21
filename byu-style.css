@@ -1,0 +1,394 @@
+/* ══════════════════════════════════════════
+   BYU Football — Custom Stylesheet
+   byu-style.css
+   ══════════════════════════════════════════ */
+
+/* ── CSS Variables ── */
+:root {
+  --navy:      #002E5D;
+  --navy-dark: #001a38;
+  --gold:      #C8A951;
+  --gold-lt:   #e8c97a;
+  --white:     #ffffff;
+  --offwhite:  #f4f1ec;
+  --lightgray: #e8e4de;
+  --text:      #1e1e1e;
+  --muted:     #5a5a5a;
+}
+
+/* ── Reset & Base ── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Merriweather', Georgia, serif;
+  background-color: var(--offwhite);
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 92vh;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/LaVell_Edwards_Stadium.jpg/1280px-LaVell_Edwards_Stadium.jpg');
+  background-size: cover;
+  background-position: center top;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 26, 56, 0.75) 0%,
+    rgba(0, 46, 93, 0.88) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  color: var(--white);
+  padding: 0 20px;
+}
+
+.hero-eyebrow {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-lt);
+  margin-bottom: 12px;
+}
+
+.hero-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  color: var(--white);
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+
+.hero-sub {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.2rem, 4vw, 2.2rem);
+  font-weight: 400;
+  letter-spacing: 0.5em;
+  color: var(--gold);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.hero-btn {
+  display: inline-block;
+  margin-top: 36px;
+  padding: 14px 38px;
+  background: var(--gold);
+  color: var(--navy-dark);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.hero-btn:hover {
+  background: var(--gold-lt);
+  transform: translateY(-2px);
+}
+
+/* ── NAVIGATION ── */
+.site-nav {
+  background: var(--navy);
+  padding: 14px 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+
+.site-nav a {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-lt);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.site-nav a:hover {
+  color: var(--white);
+}
+
+.nav-divider {
+  color: rgba(255,255,255,0.25);
+  font-size: 0.9rem;
+}
+
+/* ── SECTIONS ── */
+.section-wrap {
+  padding: 72px 6vw;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dark-section {
+  background: var(--navy-dark);
+  max-width: 100%;
+  padding: 72px 6vw;
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+
+.section-header h2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.section-header.light h2 {
+  color: var(--white);
+}
+
+.gold-bar {
+  width: 64px;
+  height: 4px;
+  background: var(--gold);
+  margin-top: 12px;
+}
+
+.section-intro {
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 28px;
+  max-width: 680px;
+}
+
+/* ── TWO COLUMN LAYOUT ── */
+.two-col {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.col-text {
+  flex: 1 1 360px;
+}
+
+.col-text p {
+  font-size: 0.97rem;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+.col-image {
+  flex: 1 1 300px;
+}
+
+.content-img {
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  display: block;
+}
+
+.img-caption {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 8px;
+  font-style: italic;
+  text-align: center;
+}
+
+/* ── CHAMPION LIST ── */
+.champion-list {
+  margin-top: 20px;
+  padding-left: 22px;
+  font-size: 0.93rem;
+}
+
+.champion-list > li {
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.champion-list ul {
+  margin-top: 6px;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.champion-list ul li {
+  color: var(--muted);
+  margin-bottom: 4px;
+  font-size: 0.88rem;
+}
+
+/* ── BIG 12 CARDS ── */
+.big12-grid {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.big12-card {
+  flex: 1 1 260px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(200, 169, 81, 0.3);
+  border-radius: 6px;
+  padding: 32px 28px;
+  transition: background 0.2s;
+}
+
+.big12-card:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.card-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.big12-card h3 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
+.big12-card p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.7;
+}
+
+/* ── PLAYERS GRID ── */
+.players-grid {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.player-card {
+  flex: 1 1 260px;
+  background: var(--white);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.player-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.14);
+}
+
+.player-img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  object-position: top;
+  background: var(--navy);
+}
+
+.player-info {
+  padding: 22px 24px;
+}
+
+.player-info h3 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.04em;
+}
+
+.player-pos {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--navy-dark);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 100px;
+  margin: 8px 0 12px;
+}
+
+.player-info p {
+  font-size: 0.86rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* ── VIDEO ── */
+.video-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+
+.video-wrap iframe {
+  display: block;
+}
+
+/* ── TABLEAU ── */
+.tableau-wrap {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  border: 1px solid var(--lightgray);
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  background: var(--navy-dark);
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  padding: 28px 20px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+}
+
+.site-footer a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: var(--gold-lt);
+}
