@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BYU Dream Roster Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy:     #002E5D;
+      --navy-dk:  #001a38;
+      --gold:     #C8A951;
+      --gold-lt:  #e8c97a;
+      --white:    #ffffff;
+      --offwhite: #f4f1ec;
+      --border:   #d6d0c4;
+      --muted:    #6b7280;
+      --red:      #c0392b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy-dk);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    .site-nav {
+      background: rgba(0,0,0,0.3);
+      padding: 12px 28px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      border-bottom: 1px solid rgba(200,169,81,0.2);
+    }
+    .site-nav a {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .site-nav a:hover { color: var(--white); }
+    .nav-div { color: rgba(255,255,255,0.2); }
+
+    /* ── HEADER ── */
+    .app-header {
+      text-align: center;
+      padding: 48px 20px 32px;
+      background: linear-gradient(180deg, rgba(0,46,93,0.9) 0%, transparent 100%);
+    }
+    .app-header h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+    .app-header h1 span { color: var(--gold); }
+    .app-header p {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .app-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 760px) {
+      .app-wrap { grid-template-columns: 1fr; }
+    }
+
+    /* ── PLAYER FORM ── */
+    .form-panel {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(200,169,81,0.25);
+      border-radius: 10px;
+      padding: 28px 24px;
+      position: sticky;
+      top: 20px;
+    }
+    .form-panel h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input::placeholder { color: rgba(255,255,255,0.3); }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--gold);
+    }
+    .form-group select option { background: var(--navy-dk); color: var(--white); }
+
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .rating-row input[type="range"] {
+      flex: 1;
+      padding: 0;
+      accent-color: var(--gold);
+    }
+    .rating-val {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gold);
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .btn-add {
+      width: 100%;
+      padding: 13px;
+      background: var(--gold);
+      color: var(--navy-dk);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-add:hover {
+      background: var(--gold-lt);
+      transform: translateY(-1px);
+    }
+
+    .error-msg {
+      color: #f87171;
+      font-size: 0.8rem;
+      margin-top: 10px;
+      text-align: center;
+      min-height: 18px;
+    }
+
+    /* ── ROSTER PANEL ── */
+    .roster-panel h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .roster-count {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── POSITION GROUPS ── */
+    .pos-group { margin-bottom: 28px; }
+    .pos-group-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    /* ── PLAYER CARD ── */
+    .player-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      animation: slideIn 0.3s ease both;
+      transition: background 0.2s;
+    }
+    .player-card:hover { background: rgba(255,255,255,0.09); }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-12px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .player-number {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .player-details { flex: 1; }
+    .player-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0.04em;
+    }
+    .player-meta {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.45);
+      margin-top: 2px;
+    }
+
+    .player-rating {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .rating-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy-dk);
+    }
+    .rating-circle.elite   { background: var(--gold); }
+    .rating-circle.great   { background: #86efac; }
+    .rating-circle.average { background: #93c5fd; }
+    .rating-circle.backup  { background: #d1d5db; }
+
+    .btn-remove {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.3);
+      border-radius: 4px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-remove:hover {
+      background: rgba(220,38,38,0.2);
+      border-color: rgba(220,38,38,0.4);
+      color: #f87171;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: rgba(255,255,255,0.2);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* ── ROSTER STATS ── */
+    .roster-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(200,169,81,0.2);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-val {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .stat-lbl {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-top: 2px;
+    }
+
+    /* ── CLEAR BTN ── */
+    .btn-clear {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.4);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-clear:hover {
+      border-color: #f87171;
+      color: #f87171;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a href="resume.html">← Résumé</a>
+    <span class="nav-div">|</span>
+    <a href="byu-football.html">BYU Football</a>
+    <span class="nav-div">|</span>
+    <a href="app.html">Dream Roster</a>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <h1>BYU <span>Dream Roster</span> Builder</h1>
+    <p>Build your ultimate Cougars lineup — add players, assign positions, and rate your squad.</p>
+  </div>
+
+  <!-- APP -->
+  <div class="app-wrap">
+
+    <!-- LEFT: FORM -->
+    <div class="form-panel">
+      <h2>➕ Add a Player</h2>
+
+      <div class="form-group">
+        <label>Player Name</label>
+        <input type="text" id="input-name" placeholder="e.g. Bear Bachmeier"/>
+      </div>
+
+      <div class="form-group">
+        <label>Jersey Number</label>
+        <input type="number" id="input-number" placeholder="e.g. 5" min="0" max="99"/>
+      </div>
+
+      <div class="form-group">
+        <label>Position</label>
+        <select id="input-position">
+          <option value="">-- Select Position --</option>
+          <optgroup label="Offense">
+            <option>Quarterback</option>
+            <option>Running Back</option>
+            <option>Wide Receiver</option>
+            <option>Tight End</option>
+            <option>Offensive Line</option>
+          </optgroup>
+          <optgroup label="Defense">
+            <option>Defensive Line</option>
+            <option>Linebacker</option>
+            <option>Cornerback</option>
+            <option>Safety</option>
+          </optgroup>
+          <optgroup label="Special Teams">
+            <option>Kicker</option>
+            <option>Punter</option>
+            <option>Return Specialist</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Overall Rating</label>
+        <div class="rating-row">
+          <input type="range" id="input-rating" min="60" max="99" value="80"/>
+          <div class="rating-val" id="rating-display">80</div>
+        </div>
+      </div>
+
+      <button class="btn-add" onclick="addPlayer()">Add to Roster</button>
+      <div class="error-msg" id="error-msg"></div>
+    </div>
+
+    <!-- RIGHT: ROSTER -->
+    <div class="roster-panel">
+      <h2>
+        <span>Your Roster</span>
+        <span class="roster-count" id="roster-count">0 players</span>
+      </h2>
+
+      <!-- Stats bar -->
+      <div class="roster-stats">
+        <div class="stat-box">
+          <div class="stat-val" id="stat-total">0</div>
+          <div class="stat-lbl">Players</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-avg">—</div>
+          <div class="stat-lbl">Avg Rating</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-best">—</div>
+          <div class="stat-lbl">Top Rated</div>
+        </div>
+      </div>
+
+      <div id="roster-list">
+        <!-- Empty state -->
+        <div class="empty-state" id="empty-state">
+          <div class="icon">🏈</div>
+          <p>Your roster is empty.<br/>Add your first player to get started!</p>
+        </div>
+      </div>
+
+      <button class="btn-clear" onclick="clearRoster()" style="margin-top:16px;">Clear Roster</button>
+    </div>
+
+  </div>
+
+  <script>
+    // ── State ──
+    let roster = [];
+
+    // Position group order
+    const POS_GROUPS = {
+      'Offense':       ['Quarterback','Running Back','Wide Receiver','Tight End','Offensive Line'],
+      'Defense':       ['Defensive Line','Linebacker','Cornerback','Safety'],
+      'Special Teams': ['Kicker','Punter','Return Specialist']
+    };
+
+    // ── Rating slider live update ──
+    document.getElementById('input-rating').addEventListener('input', function() {
+      document.getElementById('rating-display').textContent = this.value;
+    });
+
+    // ── Add Player ──
+    function addPlayer() {
+      const name     = document.getElementById('input-name').value.trim();
+      const number   = document.getElementById('input-number').value.trim();
+      const position = document.getElementById('input-position').value;
+      const rating   = parseInt(document.getElementById('input-rating').value);
+      const errEl    = document.getElementById('error-msg');
+
+      // Validation
+      if (!name)     { errEl.textContent = 'Please enter a player name.'; return; }
+      if (!position) { errEl.textContent = 'Please select a position.'; return; }
+      if (number === '' || number < 0 || number > 99) {
+        errEl.textContent = 'Please enter a valid jersey number (0–99).'; return;
+      }
+      errEl.textContent = '';
+
+      roster.push({ name, number: parseInt(number), position, rating, id: Date.now() });
+
+      // Reset form
+      document.getElementById('input-name').value = '';
+      document.getElementById('input-number').value = '';
+      document.getElementById('input-position').value = '';
+      document.getElementById('input-rating').value = 80;
+      document.getElementById('rating-display').textContent = '80';
+
+      renderRoster();
+    }
+
+    // ── Remove Player ──
+    function removePlayer(id) {
+      roster = roster.filter(p => p.id !== id);
+      renderRoster();
+    }
+
+    // ── Clear Roster ──
+    function clearRoster() {
+      if (roster.length === 0) return;
+      if (confirm('Are you sure you want to clear the entire roster?')) {
+        roster = [];
+        renderRoster();
+      }
+    }
+
+    // ── Rating color class ──
+    function ratingClass(r) {
+      if (r >= 90) return 'elite';
+      if (r >= 80) return 'great';
+      if (r >= 70) return 'average';
+      return 'backup';
+    }
+
+    // ── Render ──
+    function renderRoster() {
+      const listEl = document.getElementById('roster-list');
+      const emptyEl = document.getElementById('empty-state');
+
+      // Stats
+      const total = roster.length;
+      const avg   = total ? Math.round(roster.reduce((s,p) => s + p.rating, 0) / total) : null;
+      const best  = total ? Math.max(...roster.map(p => p.rating)) : null;
+
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-avg').textContent   = avg ?? '—';
+      document.getElementById('stat-best').textContent  = best ?? '—';
+      document.getElementById('roster-count').textContent = `${total} player${total !== 1 ? 's' : ''}`;
+
+      // Clear existing cards (keep empty state element)
+      const cards = listEl.querySelectorAll('.pos-group');
+      cards.forEach(el => el.remove());
+
+      if (total === 0) {
+        emptyEl.style.display = 'block';
+        return;
+      }
+      emptyEl.style.display = 'none';
+
+      // Group by position group
+      for (const [groupName, positions] of Object.entries(POS_GROUPS)) {
+        const groupPlayers = roster.filter(p => positions.includes(p.position));
+        if (groupPlayers.length === 0) continue;
+
+        const groupEl = document.createElement('div');
+        groupEl.className = 'pos-group';
+        groupEl.innerHTML = `<div class="pos-group-label">${groupName}</div>`;
+
+        // Sort by rating desc
+        groupPlayers.sort((a,b) => b.rating - a.rating);
+
+        groupPlayers.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'player-card';
+          card.innerHTML = `
+            <div class="player-number">#${p.number}</div>
+            <div class="player-details">
+              <div class="player-name">${p.name}</div>
+              <div class="player-meta">${p.position}</div>
+            </div>
+            <div class="player-rating">
+              <div class="rating-circle ${ratingClass(p.rating)}">${p.rating}</div>
+            </div>
+            <button class="btn-remove" onclick="removePlayer(${p.id})" title="Remove">✕</button>
+          `;
+          groupEl.appendChild(card);
+        });
+
+        listEl.appendChild(groupEl);
+      }
+    }
+
+    // Init
+    renderRoster();
+  </script>
+</body>
+</html>
